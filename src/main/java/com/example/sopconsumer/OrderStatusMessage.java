@@ -27,4 +27,12 @@ public class OrderStatusMessage {
         this.orderStatus = orderStatus;
     }
 
+    @Override
+    public String toString() {
+        return "OrderStatusMessage{" +
+                "customerEmail='" + customerEmail + '\'' +
+                ", orderStatus='" + orderStatus + '\'' +
+                '}';
+    }
+
 }

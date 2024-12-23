@@ -1,5 +1,6 @@
 package com.example.sopconsumer;
 
+import com.example.sopconsumer.websocket.NotificationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
@@ -17,11 +18,13 @@ public class SopConsumerApplication {
 
     private final MessageProcessor messageProcessor;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final NotificationService notificationService;
 
 
     @Autowired
-    public SopConsumerApplication(MessageProcessor messageProcessor) {
+    public SopConsumerApplication(MessageProcessor messageProcessor, NotificationService notificationService) {
         this.messageProcessor = messageProcessor;
+        this.notificationService = notificationService;
     }
 
 
@@ -35,6 +38,7 @@ public class SopConsumerApplication {
     public void listenOrdersQueue(String message) throws JsonProcessingException {
         OrderStatusMessage msg = objectMapper.readValue(message, OrderStatusMessage.class);
         messageProcessor.processMessage(msg.getCustomerEmail(), msg.getOrderStatus());
+        notificationService.sendNotification(String.valueOf(msg));
     }
 
 
